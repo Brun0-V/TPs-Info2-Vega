@@ -15,124 +15,107 @@ typedef struct {
     int total;
 }articulos_t;
 
-/**
- * articulos [ index, cantidad_sucursal[SUCURSAL_1], cantidad_sucursal[SUCURSAL_2], cantidad_sucursal[SUCURSAL_3], total]
- * articulos [index, descripcion]
- */
+void importar_articulos(articulos_t *articulos);
+void ordenar_articulos(articulos_t *articulos);
+void imprimir_articulos(articulos_t *articulos);
 
 int main(void)
 {
-    int  opc=0, i, articulo_index, sucursal;
-    char articulo[90];
     articulos_t articulos[CANT_ARTICULOS] = {0};
     printf("Bienvendio al final de Info 1\n\n");
 
     /*CARGA de las fichas*/
-
-    do
-    {
-        printf("Ingrese la descripcion del articulo: ");
-        scanf("%s",articulo);
-
-        // for (i = 0; i < CANT_ARTICULOS; i++)
-        // {
-        //     if(!strcmp(articulo,articulos[i])){ // si son iguales
-        //         articulo_index = i;
-        //         break;
-        //     }
-
-        //     if(articulos[i][0] == 0){ //'\b' Null
-        //         strcpy(articulos[i], articulo);
-        //         articulo_index = i;
-        //         break;
-        //     }
-        // }
-    
-        i=0;
-        while (articulos[i].descripcion[0] && strcmp(articulo, articulos[i].descripcion)) i++;
-        articulo_index = i;
-        strcpy(articulos[i].descripcion, articulo);
-
-        printf("\n%s, Indice: %d\n", articulos[articulo_index].descripcion, articulo_index);
-
-        printf("Para que sucursal va a realizar la carga? (1,2,3)");
-        scanf("%d", &sucursal);
-
-        // switch (sucursal)
-        // {
-        // case SUCURSAL_1:
-        //     printf("Ingrese la cantidad del articulo para la sucursal 1: ");
-        //     scanf("%d",&articulos[articulo_index].cantidad_sucursal[SUCURSAL_1]);
-        //     break;
-        // case SUCURSAL_2:
-        //     printf("Ingrese la cantidad del articulo para la sucursal 2: ");
-        //     scanf("%d",&articulos[articulo_index].cantidad_sucursal[SUCURSAL_2]);
-        //     break;
-        // case SUCURSAL_3:
-        //     printf("Ingrese la cantidad del articulo para la sucursal 3: ");
-        //     scanf("%d",&articulos[articulo_index].cantidad_sucursal[SUCURSAL_3]);
-        //     break;
-        // default:
-        //     printf("\nLo siento no encontre la sucursal");
-        //     break;
-        // }
-        printf("Ingrese la cantidad del articulo para la sucursal %d: ", sucursal);
-        scanf("%d", &articulos[articulo_index].cantidad_sucursal[sucursal-1]);
-        for(i=0;i<3;i++) articulos[articulo_index].total += articulos[articulo_index].cantidad_sucursal[i];        
-
-        printf("Desea ingresar otro articulo? 1-Si, 2-No");
-        scanf("%d",&opc);
-    } while (opc==1);
+    importar_articulos(articulos);
     /* Impresion de fichas cargadas*/
-    i=0;
-    printf("Articulo\tSucursal 1\tSucursal 2\tSucursal 3\tTotal\n");
-    while(i< CANT_ARTICULOS && articulos[i].descripcion[0]){
-        printf("%s\t%d\t%d\t%d\t%d\n", articulos[i].descripcion, articulos[i].cantidad_sucursal[SUCURSAL_1], articulos[i].cantidad_sucursal[SUCURSAL_2], articulos[i].cantidad_sucursal[SUCURSAL_3],articulos[i].total);
-        i++;
-    }
-    /* Ordenamiento */
+    imprimir_articulos(articulos);
 
-    for ( opc = 1; opc < CANT_ARTICULOS; opc++)
-    {
-        for ( i = 0; i < CANT_ARTICULOS-1; i++)
-        {
-            if(articulos[i].total<articulos[i+1].total){
-                strcpy (articulo,articulos[i].descripcion);
-                strcpy(articulos[i].descripcion,articulos[i+1].descripcion);
-                strcpy(articulos[i+1].descripcion, articulo);
-
-                articulo_index = articulos[i].cantidad_sucursal[SUCURSAL_1];
-                articulos[i].cantidad_sucursal[SUCURSAL_1] = articulos[i+1].cantidad_sucursal[SUCURSAL_1];
-                articulos[i+1].cantidad_sucursal[SUCURSAL_1] = articulo_index;
-
-                articulo_index = articulos[i].cantidad_sucursal[SUCURSAL_2];
-                articulos[i].cantidad_sucursal[SUCURSAL_2] = articulos[i + 1].cantidad_sucursal[SUCURSAL_2];
-                articulos[i + 1].cantidad_sucursal[SUCURSAL_2] = articulo_index;
-
-                articulo_index = articulos[i].cantidad_sucursal[SUCURSAL_3];
-                articulos[i].cantidad_sucursal[SUCURSAL_3] = articulos[i + 1].cantidad_sucursal[SUCURSAL_3];
-                articulos[i + 1].cantidad_sucursal[SUCURSAL_3] = articulo_index;
-
-                articulo_index = articulos[i].total;
-                articulos[i].total = articulos[i + 1].total;
-                articulos[i + 1].total = articulo_index;
-            }
-            
-        }
-        
-    }
-
-    printf("\n\n###################################");
-    printf("\n##############ORDENADO################");
-    printf("\n################################### \n");
-
-    i = 0;
-    printf("Articulo\tSucursal 1\tSucursal 2\tSucursal 3\tTotal\n");
-    while (i < CANT_ARTICULOS && articulos[i].descripcion[0])
-    {
-        printf("%s\t%9d\t%4d\t%3d\t%8d\n", articulos[i].descripcion, articulos[i].cantidad_sucursal[SUCURSAL_1], articulos[i].cantidad_sucursal[SUCURSAL_2], articulos[i].cantidad_sucursal[SUCURSAL_3], articulos[i].total);
-        i++;
-    }
+    printf("\n##############ORDENADO################\n");
+    ordenar_articulos(articulos);
+    imprimir_articulos(articulos);
 
     return 0;
+}
+
+void importar_articulos(articulos_t *articulos){
+    char articulo[90];
+    int i, index, opc, sucursal, temp;
+    do{
+        printf("Ingrese la descripcion del articulo: ");
+        scanf("%s", articulo);
+
+        i=0;
+        while (articulos[i].descripcion[0] && strcmp(articulo, articulos[i].descripcion)) i++;
+        index = i;
+        strcpy(articulos[i].descripcion, articulo);
+
+        do{
+            printf("Para que sucursal va a realizar la carga? (1,2,3)");
+            scanf("%d", &sucursal);
+            if(sucursal<1 || sucursal>3) printf("Sucursal no valida, ingrese nuevamente\n");
+        } while(sucursal<1 || sucursal>3);
+
+        do{
+            printf("Ingrese la cantidad del articulo para la sucursal %d: ", sucursal);
+            scanf("%d", &temp);
+            if(temp<0) printf("Cantidad no valida, ingrese nuevamente\n");
+            
+        } while(temp<0);
+        articulos[index].cantidad_sucursal[sucursal-1] = temp; 
+
+        for(i=0;i<3;i++) articulos[index].total += articulos[index].cantidad_sucursal[i];
+        printf("Desea ingresar otro articulo? 1-Si, 2-No");
+        scanf("%d",&opc);
+
+    } while (opc == 1);
+
+}
+
+void ordenar_articulos(articulos_t *articulos){
+    char desc_temp[90];
+    int temp;
+    for(int k = 1; k < CANT_ARTICULOS; k++){
+        for(int i = 0; i < CANT_ARTICULOS-1; i++){
+            if(articulos[i].total < articulos[i+1].total){
+                strcpy(desc_temp, articulos[i].descripcion);
+                strcpy(articulos[i].descripcion, articulos[i+1].descripcion);
+                strcpy(articulos[i+1].descripcion, desc_temp);
+
+                temp = articulos[i].cantidad_sucursal[SUCURSAL_1];
+                articulos[i].cantidad_sucursal[SUCURSAL_1] = articulos[i+1].cantidad_sucursal[SUCURSAL_1];
+                articulos[i+1].cantidad_sucursal[SUCURSAL_1] = temp;
+
+                temp = articulos[i].cantidad_sucursal[SUCURSAL_2];
+                articulos[i].cantidad_sucursal[SUCURSAL_2] = articulos[i + 1].cantidad_sucursal[SUCURSAL_2];
+                articulos[i + 1].cantidad_sucursal[SUCURSAL_2] = temp;
+
+                temp = articulos[i].cantidad_sucursal[SUCURSAL_3];
+                articulos[i].cantidad_sucursal[SUCURSAL_3] = articulos[i + 1].cantidad_sucursal[SUCURSAL_3];
+                articulos[i + 1].cantidad_sucursal[SUCURSAL_3] = temp;
+
+                temp = articulos[i].total;
+                articulos[i].total = articulos[i + 1].total;
+                articulos[i + 1].total = temp;
+            }
+        }
+    }
+}
+
+void imprimir_articulos(articulos_t *articulos){
+    int i=0;
+    printf("%-15s %-15s %-15s %-15s %-10s\n",
+           "Articulo",
+           "Sucursal 1",
+           "Sucursal 2",
+           "Sucursal 3",
+           "Total");
+
+    while(i< CANT_ARTICULOS && articulos[i].descripcion[0]){
+        printf("%-15s %-15d %-15d %-15d %-10d\n",
+               articulos[i].descripcion,
+               articulos[i].cantidad_sucursal[SUCURSAL_1],
+               articulos[i].cantidad_sucursal[SUCURSAL_2],
+               articulos[i].cantidad_sucursal[SUCURSAL_3],
+               articulos[i].total);
+        i++;
+    }
 }
