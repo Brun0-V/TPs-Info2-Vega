@@ -23,13 +23,11 @@ int main(void)
 {
     articulos_t articulos[CANT_ARTICULOS] = {0};
     printf("Bienvendio al final de Info 1\n\n");
-
     /*CARGA de las fichas*/
     importar_articulos(articulos);
-    /* Impresion de fichas cargadas*/
-    imprimir_articulos(articulos);
 
-    printf("\n##############ORDENADO################\n");
+    imprimir_articulos(articulos);
+    printf("\n------------------------ORDENADO------------------------\n");
     ordenar_articulos(articulos);
     imprimir_articulos(articulos);
 
