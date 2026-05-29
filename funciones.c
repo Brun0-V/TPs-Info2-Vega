@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <string.h>
 #include "funciones.h"
 
 void importar_articulos(articulos_t *articulos){
@@ -9,6 +11,14 @@ void importar_articulos(articulos_t *articulos){
 
         i=0;
         while (articulos[i].descripcion[0] && strcmp(articulo, articulos[i].descripcion)) i++;
+        
+        if (i >= CANT_ARTICULOS) {
+            printf("No se puede agregar articulos nuevos, límite alcanzado (%d)\n", CANT_ARTICULOS);
+            printf("Desea ingresar otro articulo? 1-Si, 2-No: ");
+            scanf("%d",&opc);
+            continue;
+        }   // Check de limite de articulos
+        
         index = i;
         strcpy(articulos[i].descripcion, articulo);
 
@@ -26,8 +36,9 @@ void importar_articulos(articulos_t *articulos){
         articulos[index].cantidad_sucursal[sucursal-1] = temp; 
         
         articulos[index].total = 0;
-        for(i = 0; i < 3; i++) articulos[index].total += articulos[index].cantidad_sucursal[i];
-        printf("Desea ingresar otro articulo? 1-Si, 2-No ");
+        for(i = 0; i < 3; i++) articulos[index].total += articulos[index].cantidad_sucursal[i]; // Suma del total
+
+        printf("Desea ingresar otro articulo? 1-Si, 2-No: ");
         scanf("%d",&opc);
     } while (opc == 1);
     
@@ -39,7 +50,7 @@ void ordenar_articulos(articulos_t *articulos){
             if(articulos[i].total < articulos[i+1].total) swap(&articulos[i], &articulos[i+1]);
         }
     }
-}   // Bubble sort que ordena los articulos de mayor a menor segun su cantidad total, usando la funcion swap para intercambiar los valores de las estructuras completas
+}   // Bubble sort de mayor a menor usando la funcion swap para intercambiar los valores de las estructuras completas
 
 void swap(articulos_t *a, articulos_t *b){
     articulos_t temp;
@@ -66,5 +77,5 @@ void imprimir_articulos(articulos_t *articulos){
                articulos[i].total);
         i++;
     }
-}
+}   // Imprime los articulos con su cantidad por sucursal y total en formato de tabla
 
