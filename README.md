@@ -32,7 +32,3 @@ Ejecutar con:
 ./tp1
 ```
 
-## Notas
-
-- El límite de artículos es `60`.
-- Las sucursales están definidas como `SUCURSAL_1`, `SUCURSAL_2` y `SUCURSAL_3`.
